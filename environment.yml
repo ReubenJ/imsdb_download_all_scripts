@@ -7,3 +7,4 @@ dependencies:
   - pip:
     - beautifulsoup4==4.4.1
     - requests==2.10.0
+    - rich

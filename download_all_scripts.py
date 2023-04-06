@@ -3,6 +3,7 @@ from urllib.parse import quote
 
 from bs4 import BeautifulSoup
 import requests
+from rich.progress import track
 
 BASE_URL = 'http://www.imsdb.com'
 SCRIPTS_DIR = 'scripts'
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     soup = BeautifulSoup(html, "html.parser")
     paragraphs = soup.find("h1", text="All Movie Scripts on IMSDb (A-Z)").find_next_siblings("p")
 
-    for p in paragraphs:
+    for p in track(paragraphs):
         relative_link = p.a['href']
         title, script = get_script(relative_link)
         if not script:
