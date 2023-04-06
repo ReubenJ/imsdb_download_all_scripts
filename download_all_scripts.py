@@ -4,6 +4,15 @@ from urllib.parse import quote
 from bs4 import BeautifulSoup
 import requests
 from rich.progress import track
+import logging
+from rich.logging import RichHandler
+
+FORMAT = "%(message)s"
+logging.basicConfig(
+    level=logging.INFO, format=FORMAT, datefmt="[%X]", handlers=[RichHandler()]
+)
+logging.getLogger("requests").setLevel(logging.WARNING)
+log = logging.getLogger("IMSDb Script Downloader")
 
 BASE_URL = 'http://www.imsdb.com'
 SCRIPTS_DIR = 'scripts'
@@ -25,7 +34,7 @@ top.location.href=location.href
 
 def get_script(relative_link):
     tail = relative_link.split('/')[-1]
-    print('fetching %s' % tail)
+    log.info('fetching %s' % tail)
     script_front_url = BASE_URL + quote(relative_link)
     front_page_response = requests.get(script_front_url)
     front_soup = BeautifulSoup(front_page_response.text, "html.parser")
@@ -33,7 +42,7 @@ def get_script(relative_link):
     try:
         script_link = front_soup.find_all('p', align="center")[0].a['href']
     except IndexError:
-        print('%s has no script :(' % tail)
+        log.error('%s has no script :(' % tail)
         return None, None
 
     if script_link.endswith('.html'):
@@ -44,7 +53,7 @@ def get_script(relative_link):
         script_text = clean_script(script_text)
         return title, script_text
     else:
-        print('%s is a pdf :(' % tail)
+        log.error('%s is a pdf :(' % tail)
         return None, None
 
 
