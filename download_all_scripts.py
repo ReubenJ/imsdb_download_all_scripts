@@ -48,7 +48,7 @@ def get_script(relative_link):
 
 
 if __name__ == "__main__":
-    response = requests.get('http://www.imsdb.com/all%20scripts/')
+    response = requests.get('https://imsdb.com/all-scripts.html')
     html = response.text
 
     soup = BeautifulSoup(html, "html.parser")
