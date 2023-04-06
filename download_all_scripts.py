@@ -52,7 +52,7 @@ if __name__ == "__main__":
     html = response.text
 
     soup = BeautifulSoup(html, "html.parser")
-    paragraphs = soup.find_all('p')
+    paragraphs = soup.find("h1", text="All Movie Scripts on IMSDb (A-Z)").find_next_siblings("p")
 
     for p in paragraphs:
         relative_link = p.a['href']
