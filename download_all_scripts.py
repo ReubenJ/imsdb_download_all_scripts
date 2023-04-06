@@ -16,6 +16,7 @@ log = logging.getLogger("IMSDb Script Downloader")
 
 BASE_URL = 'http://www.imsdb.com'
 SCRIPTS_DIR = 'scripts'
+EXISTING_SCRIPTS = os.listdir(SCRIPTS_DIR)
 
 
 def clean_script(text):
@@ -47,6 +48,9 @@ def get_script(relative_link):
 
     if script_link.endswith('.html'):
         title = script_link.split('/')[-1].split(' Script')[0]
+        if title.strip('.html') + '.txt' in EXISTING_SCRIPTS:
+            log.info('already downloaded %s, skipping...' % tail)
+            return None, None
         script_url = BASE_URL + script_link
         script_soup = BeautifulSoup(requests.get(script_url).text, "html.parser")
         script_text = script_soup.find_all('td', {'class': "scrtext"})[0].get_text()
